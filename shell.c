@@ -1,7 +1,7 @@
 #include "shell.h"
 #include <signal.h>
 
-void readAndExecuteCommands(char **paths, char *av0) {
+void handlecommands(char **paths, char *av0) {
     char *line = NULL;
     size_t bufsize = 0;
     ssize_t linesize = 0;
@@ -51,7 +51,7 @@ int main(int ac, char **av, char *envp[])
     path = path_handler();
     paths = tokenize(path);
 
-    readAndExecuteCommands(paths, av[0]);
+    handlecommands(paths, av[0]);
 
     freebuff(paths);
     free(path);
