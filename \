@@ -1,14 +1,6 @@
 #include "shell.h"
 #include <signal.h>
 
-/**
- * main - carries out the read, execute, then print output loop
- * @argc: argument count
- * @argv: argument vector
- * @envv: environment vector
- *
- * Return: 0
- */
 int main(int argc, char **argv, char *envv[])
 {
 	char *line = NULL, *pathcommand = NULL, *path = NULL;
@@ -47,6 +39,7 @@ int main(int argc, char **argv, char *envv[])
 		else
 			execute(pathcommand, commandargs);
 	}
+
 	freebuff(commandargs);
 	freebuff(paths);
 	free(line);
