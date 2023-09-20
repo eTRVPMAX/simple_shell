@@ -15,6 +15,6 @@ void prompt(void)
 		flags.interactive = 1;
 
 	if (flags.interactive)
-		write(STDERR_FILENO, "$ ", 2);
+		write(STDERR_FILENO, "#cisfun$ ", 9);
 }
 
