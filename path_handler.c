@@ -1,3 +1,5 @@
+#include "shell.h"
+
 /**
 * path_handler - finds the path from the global enviroment
 * Return: NULL if path is not found or path if path is found.
