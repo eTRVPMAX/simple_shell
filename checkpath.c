@@ -58,24 +58,23 @@ char *addpath(char *path, char *command)
 	return (buf);
 }
 /**
- * _strcpy - copies a string
- * @dest: destination string
- * @src: source string
- *
- * Return: pointer to the destination string
- */
+* _strcpy - copies a string
+* @dest: destination string
+* @src: source string
+*
+* Return: pointer to the destination string
+*/
 char *_strcpy(char *dest, const char *src)
 {
-    char *dest_ptr = dest;
+	char *dest_ptr = dest;
 
-    while (*src)
-    {
-        *dest_ptr = *src;
-        dest_ptr++;
-        src++;
-    }
+	while (*src)
+	{
+	*dest_ptr = *src;
+	dest_ptr++;
+	src++;
+	}
 
-    *dest_ptr = '\0';
-
-    return dest;
+	*dest_ptr = '\0';
+	return (dest);
 }
