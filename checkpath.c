@@ -15,10 +15,9 @@ char *checkpath(char **path, char *command)
 	while (path[i])
 	{
 		output = addpath(path[i], command);
-		if (output != NULL)
-		{
+		if (access(output, F_OK | X_OK) == 0)
 			return (output);
-		}
+		free(output);
 		i++;
 	}
 	return (NULL);
