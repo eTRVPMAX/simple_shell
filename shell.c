@@ -1,6 +1,14 @@
 #include "shell.h"
 #include <signal.h>
 
+/**
+* main - carries out the read, execute then print output loop
+* @argc: argument count
+* @argv: argument vector
+* @envp: environment vector
+*
+* Return: 0
+*/
 int main(int ac, char **av, char *envp[])
 {
     char *line = NULL, *pathcommand = NULL, *path = NULL;
