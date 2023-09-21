@@ -2,29 +2,49 @@
 #include <signal.h>
 
 /**
- * execute_command - executes the given command
- * @command: the command to be executed
- * @environ: the environment variables
- * @av: the argument vector
+ * read_input - reads input from stdin
+ * @line: pointer to the input line
+ * @bufsize: pointer to the buffer size
+ * @command: pointer to the command array
+ * @paths: pointer to the paths array
+ * @pathcommand: pointer to the path command
+ *
+ * Return: number of characters read, or -1 on failure
  */
-void execute_command(char **command, char **environ, char **av)
+ssize_t read_input(char **line, size_t *bufsize,
+char ***command, char ***paths,
+char **pathcommand)
 {
-	char *path = NULL;
-	char **paths = NULL;
-	char *pathcommand = NULL;
+	ssize_t linesize;
 
-	path = path_handler();
-	paths = tokenize(path);
-	pathcommand = checkpath(paths, command[0]);
+	prompt();
+	linesize = getline(line, bufsize, stdin);
+	if (linesize < 0)
+		return (-1);
+	info.count++;
+	if ((*line)[linesize - 1] == '\n')
+		(*line)[linesize - 1] = '\0';
+	*command = tokenize(*line);
+	if (*command == NULL || **command == NULL || ***command == '\0')
+		return (linesize);
+	*paths = tokenize(path_handler());
+	*pathcommand = checkpath(*paths, (*command)[0]);
+	return (linesize);
+}
 
-	if (!pathcommand)
+/**
+ * execute_command - executes the command using fork and execve
+ * @line: the input line
+ * @pathcommand: the path command to execute
+ * @command: the command array
+ * @av: argument vector
+ *
+ * Return: void
+ */
+void execute_command(char *line, char *pathcommand, char **command, char **av)
+{
+	switch (fork())
 	{
-		perror(av[0]);
-	}
-	else
-	{
-		switch (fork())
-		{
 		case -1:
 			perror(av[0]);
 			break;
@@ -33,59 +53,53 @@ void execute_command(char **command, char **environ, char **av)
 			{
 				perror(av[0]);
 				freebuff(command);
+				free(line);
 				exit(98);
 			}
 			break;
 		default:
 			wait(NULL);
 			break;
-		}
 	}
 }
 
 /**
  * main - carries out the read, execute then print output loop
- * @argc: argument count
- * @argv: argument vector
+ * @ac: argument count
+ * @av: argument vector
  * @envp: environment vector
  *
  * Return: 0
  */
-int main(int argc, char **argv, char *envp[])
+int main(int ac, char **av, char *envp[])
 {
-	char *line = NULL;
+	char *line = NULL, *pathcommand = NULL, *path = NULL;
 	size_t bufsize = 0;
 	ssize_t linesize = 0;
-	char **command = NULL;
-
-	(void)envp, (void)argv;
-
-	if (argc < 1)
+	char **command = NULL, **paths = NULL;
+	(void)envp, (void)av;
+	if (ac < 1)
 		return (-1);
 	signal(SIGINT, signal_handler);
 	while (1)
 	{
 		freebuff(command);
-		free(line);
-		prompt();
-		linesize = getline(&line, &bufsize, stdin);
-
+		freebuff(paths);
+		free(pathcommand);
+		linesize = read_input(&line, &bufsize, &command, &paths, &pathcommand);
 		if (linesize < 0)
 			break;
-		info.count++;
-		if (line[linesize - 1] == '\n')
-			line[linesize - 1] = '\0';
-		command = tokenize(line);
-		if (command == NULL || *command == NULL || **command == '\0')
-			continue;
-		if (checkbuiltin(command, line))
-			continue;
-		execute_command(command, environ, argv);
+		if (!pathcommand)
+		{
+			perror(av[0]);
+		}
+		else
+		{
+			execute_command(line, pathcommand, command, av);
+		}
 	}
-
 	if (linesize < 0 && flags.interactive)
 		write(STDERR_FILENO, "\n", 1);
 	free(line);
 	return (0);
 }
-
