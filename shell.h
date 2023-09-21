@@ -35,6 +35,7 @@ void execute(char *cp, char **cmd);
 char *path_handler(void);
 char *_strcpy(char *dest, const char *src);
 void handlecommands(char **paths, char *av0);
+void executecommand(char *pathcommand, char **command, char **av, char *line);
 /**
  * struct builtin - struct stores information about built-in commands
  * @env: Environment variable
