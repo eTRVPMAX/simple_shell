@@ -32,12 +32,15 @@ int main(int argc, char **argv, char *envp[])
 		if (line[linesize - 1] == '\n')
 			line[linesize - 1] = '\0';
 		command = tokenize(line);
-		if (command == NULL || *command == NULL || **command == '\0') continue;
-		if (checkbuiltin(command, line)) continue;
+		if (command == NULL || *command == NULL || **command == '\0')
+			continue;
+		if (checkbuiltin(command, line))
+			continue;
 		path = path_handler();
 		paths = tokenize(path);
 		pathcommand = checkpath(paths, command[0]);
-		if (!pathcommand) perror(argv[0]);
+		if (!pathcommand)
+			perror(argv[0]);
 		else
 			execute(pathcommand, command);
 	}
