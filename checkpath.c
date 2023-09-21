@@ -15,9 +15,10 @@ char *checkpath(char **path, char *command)
 	while (path[i])
 	{
 		output = addpath(path[i], command);
-		if (access(output, F_OK | X_OK) == 0)
+		if (output != NULL)
+		{
 			return (output);
-		free(output);
+		}
 		i++;
 	}
 	return (NULL);
@@ -32,29 +33,48 @@ char *checkpath(char **path, char *command)
  */
 char *addpath(char *path, char *command)
 {
-	int i = 0, j = 0;
-	int pathlen = 0;
-	int commandlen = 0;
-	char *buf = malloc(sizeof(char) * (pathlen + commandlen + 2));
+	char *buf;
+	size_t i = _strlen(path);
+	size_t j = _strlen(command);
 
-	if (command == NULL)
-		command = "";
-	if (path == NULL)
-		path = "";
-	while (path[pathlen] != '\0')
-		pathlen++;
-	while (command[commandlen] != '\0')
-		commandlen++;
-	if (!buf)
+	if (j == 0 && i > 0 && path[i - 1] == '/')
+	{
 		return (NULL);
-	for (i = 0; i < pathlen; i++)
-		buf[i] = path[i];
-	buf[i++] = '/';
+	}
 
-	for (j = 0; j < commandlen; j++)
-		buf[i + j] = command[j];
+	buf = malloc(sizeof(char) * (i + j + 2));
+	if (!buf)
+	{
+		return (NULL);
+	}
 
-	buf[i + j] = '\0';
+	_strcpy(buf, path);
+	if (i > 0 && path[i - 1] != '/')
+	{
+		_strcat(buf, "/");
+	}
+	_strcat(buf, command);
 
 	return (buf);
+}
+/**
+* _strcpy - copies a string
+* @dest: destination string
+* @src: source string
+*
+* Return: pointer to the destination string
+*/
+char *_strcpy(char *dest, const char *src)
+{
+	char *dest_ptr = dest;
+
+	while (*src)
+	{
+	*dest_ptr = *src;
+	dest_ptr++;
+	src++;
+	}
+
+	*dest_ptr = '\0';
+	return (dest);
 }

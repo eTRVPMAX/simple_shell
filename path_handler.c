@@ -1,27 +1,28 @@
 #include "shell.h"
+#include <string.h>
 
 /**
-* path_handler - finds the path from the global enviroment
-* Return: NULL if path is not found or path if path is found.
-*/
+ * path_handler - finds the path from the global environment
+ * Return: NULL if path is not found or path if path is found.
+ */
 char *path_handler(void)
 {
-	int x;
-	char **env = environ, *path = NULL;
+	char **env = environ;
+	char *path = NULL;
 
-	while (*env)
+	while (*env != NULL)
 	{
 		if (_strncmp(*env, "PATH=", 5) == 0)
 		{
-			path = *env;
-			while (*path && x < 5)
+			path = _strchr(*env, '=');
+			if (path != NULL)
 			{
 				path++;
-				x++;
+				return (path);
 			}
-			return (path);
 		}
 		env++;
 	}
 	return (NULL);
 }
+
