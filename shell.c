@@ -56,7 +56,7 @@ int main(int ac, char **av, char *envp[])
 	signal(SIGINT, signal_handler);
 	while (1)
 	{
-		freeit;
+		freeit(command, paths, pathcommand);
 		prompt();
 		linesize = getline(&line, &bufsize, stdin);
 		if (linesize < 0)
