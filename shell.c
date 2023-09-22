@@ -1,7 +1,7 @@
 #include "shell.h"
 #include <signal.h>
 
-void remove_comment(char *input)
+void commenthandler(char *input)
 {
 	int i = 0;
 
@@ -14,6 +14,20 @@ void remove_comment(char *input)
 		i++;
 	}
 	input[i] = '\0';
+}
+
+/**
+ * Frees the memory allocated for the command array, paths array, and pathcommand string.
+ *
+ * @param command The command array to free.
+ * @param paths The paths array to free.
+ * @param pathcommand The pathcommand string to free.
+ */
+void freeit(char **command, char **paths, char *pathcommand)
+{
+	freebuff(command);
+	freebuff(paths);
+	free(pathcommand);
 }
 
 /**
@@ -36,9 +50,7 @@ int main(int ac, char **av, char *envp[])
 	signal(SIGINT, signal_handler);
 	while (1)
 	{
-		freebuff(command);
-		freebuff(paths);
-		free(pathcommand);
+		freeit(command, paths, pathcommand);
 		prompt();
 		linesize = getline(&line, &bufsize, stdin);
 		if (linesize < 0)
@@ -46,7 +58,7 @@ int main(int ac, char **av, char *envp[])
 		info.count++;
 		if (line[linesize - 1] == '\n')
 			line[linesize - 1] = '\0';
-		remove_comment(line);
+		commenthandler(line);
 		if (line[0] == '\0')
 			continue;
 		command = tokenize(line);
@@ -58,9 +70,7 @@ int main(int ac, char **av, char *envp[])
 		paths = tokenize(path);
 		pathcommand = checkpath(paths, command[0]);
 		if (!pathcommand)
-		{
 			perror(av[0]);
-		}
 		else
 			executecommand(pathcommand, command, av, line);
 	}

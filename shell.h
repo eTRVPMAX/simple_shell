@@ -36,6 +36,8 @@ char *path_handler(void);
 char *_strcpy(char *dest, const char *src);
 void handlecommands(char **paths, char *av0);
 void executecommand(char *pathcommand, char **command, char **av, char *line);
+void freeit(char **command, char **paths, char *pathcommand);
+void commenthandler(char *input);
 /**
  * struct builtin - struct stores information about built-in commands
  * @env: Environment variable
