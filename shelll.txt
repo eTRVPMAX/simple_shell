@@ -1,25 +1,12 @@
 #include "shell.h"
 #include <signal.h>
 
-void remove_comment(char *input)
-{
-	int i = 0;
 
-	if (input[i] == '#')
-		input[i] = '\0';
-	while (input[i] != '\0')
-	{
-		if (input[i] == '#' && input[i - 1] == ' ')
-			break;
-		i++;
-	}
-	input[i] = '\0';
-}
 
 /**
  * main - carries out the read, execute, then print output loop
- * @argc: argument count
- * @argv: argument vector
+ * @ac: argument count
+ * @av: argument vector
  * @envp: environment vector
  *
  * Return: 0
@@ -46,9 +33,6 @@ int main(int ac, char **av, char *envp[])
 		info.count++;
 		if (line[linesize - 1] == '\n')
 			line[linesize - 1] = '\0';
-		remove_comment(line);
-		if (line[0] == '\0')
-			continue;
 		command = tokenize(line);
 		if (command == NULL || *command == NULL || **command == '\0')
 			continue;
@@ -71,7 +55,7 @@ int main(int ac, char **av, char *envp[])
 }
 
 /**
- * executecommand - executes a command by forking a child process and calling execve
+ * executecommand - executes a command
  * @pathcommand: the path of the command to execute
  * @command: an array of strings representing the command and its arguments
  * @av: the argument vector
@@ -83,6 +67,7 @@ void executecommand(char *pathcommand, char **command, char **av, char *line)
 	{
 		case -1:
 			perror(av[0]);
+			/* Handle error */
 			break;
 		case 0:
 			if (execve(pathcommand, command, environ) == -1)
