@@ -1,6 +1,12 @@
 #include "shell.h"
 #include <signal.h>
 
+/**
+ * commenthandler - Removes comments from the input string.
+ * The comments are denoted by '#' character.
+ *
+ * @input: - The input string.
+ */
 void commenthandler(char *input)
 {
 	int i = 0;
@@ -17,11 +23,11 @@ void commenthandler(char *input)
 }
 
 /**
- * Frees the memory allocated for the command array, paths array, and pathcommand string.
- *
- * @param command The command array to free.
- * @param paths The paths array to free.
- * @param pathcommand The pathcommand string to free.
+ * freeit - Frees the memory allocated for the command array,
+ * paths array, and pathcommand string.
+ * @command: The command array to free.
+ * @paths: The paths array to free.
+ * @pathcommand: The pathcommand string to free.
  */
 void freeit(char **command, char **paths, char *pathcommand)
 {
@@ -32,8 +38,8 @@ void freeit(char **command, char **paths, char *pathcommand)
 
 /**
  * main - carries out the read, execute, then print output loop
- * @argc: argument count
- * @argv: argument vector
+ * @ac: argument count
+ * @av: argument vector
  * @envp: environment vector
  *
  * Return: 0
@@ -50,7 +56,7 @@ int main(int ac, char **av, char *envp[])
 	signal(SIGINT, signal_handler);
 	while (1)
 	{
-		freeit(command, paths, pathcommand);
+		freeit;
 		prompt();
 		linesize = getline(&line, &bufsize, stdin);
 		if (linesize < 0)
@@ -81,7 +87,7 @@ int main(int ac, char **av, char *envp[])
 }
 
 /**
- * executecommand - executes a command by forking a child process and calling execve
+ * executecommand - executes a command
  * @pathcommand: the path of the command to execute
  * @command: an array of strings representing the command and its arguments
  * @av: the argument vector
