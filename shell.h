@@ -18,6 +18,7 @@ int checkbuiltin(char **cmd, char *buf);
 void prompt(void);
 void signal_handler(int m);
 char **tokenize(char *line);
+void _env(void);
 int handle_builtin(char **command, char *line);
 void exitt(char **command, char *line);
 void _env(void);
